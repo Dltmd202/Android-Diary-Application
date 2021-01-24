@@ -125,25 +125,34 @@ public class Fragment3 extends Fragment {
 
         setData3();
     }
-    private void setData1(){
+    private void setData1() {
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(20.0f,"",getResources().getDrawable(R.drawable.smile1_24)));
-        entries.add(new PieEntry(20.0f,"",getResources().getDrawable(R.drawable.smile2_24)));
-        entries.add(new PieEntry(20.0f,"",getResources().getDrawable(R.drawable.smile3_24)));
-        entries.add(new PieEntry(20.0f,"",getResources().getDrawable(R.drawable.smile4_24)));
-        entries.add(new PieEntry(20.0f,"",getResources().getDrawable(R.drawable.smile5_24)));
 
-        PieDataSet dataSet = new PieDataSet(entries,"기분별 비율 ");
+        entries.add(new PieEntry(20.0f, "",
+                getResources().getDrawable(R.drawable.smile1_24)));
+        entries.add(new PieEntry(20.0f, "",
+                getResources().getDrawable(R.drawable.smile2_24)));
+        entries.add(new PieEntry(20.0f, "",
+                getResources().getDrawable(R.drawable.smile3_24)));
+        entries.add(new PieEntry(20f, "",
+                getResources().getDrawable(R.drawable.smile4_24)));
+        entries.add(new PieEntry(20.0f, "",
+                getResources().getDrawable(R.drawable.smile5_24)));
+
+        PieDataSet dataSet = new PieDataSet(entries, "기분별 비율");
+
         dataSet.setDrawIcons(true);
+
         dataSet.setSliceSpace(3f);
-        dataSet.setIconsOffset(new MPPointF(0,40));
+        dataSet.setIconsOffset(new MPPointF(0, -40));
         dataSet.setSelectionShift(5f);
 
         ArrayList<Integer> colors = new ArrayList<>();
-        for (int c : ColorTemplate.JOYFUL_COLORS){
+        for (int c : ColorTemplate.JOYFUL_COLORS) {
             colors.add(c);
         }
         dataSet.setColors(colors);
+
         PieData data = new PieData(dataSet);
         data.setValueTextSize(22.0f);
         data.setValueTextColor(Color.WHITE);
@@ -152,47 +161,70 @@ public class Fragment3 extends Fragment {
         chart.invalidate();
     }
 
-    private void setData2(){
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        BarEntry bar = new BarEntry(1,20);
-        entries.add(new BarEntry(2,30));
-        entries.add(new BarEntry(3,40));
-        entries.add(new BarEntry(4,50));
-        entries.add(new BarEntry(5,70));
+    private void setData2() {
 
-        BarDataSet barDataSet = new BarDataSet(entries,"요일별 기분");
-        barDataSet.setBarBorderColor(Color.WHITE);
+        ArrayList<BarEntry> entries = new ArrayList<>();
+
+        entries.add(new BarEntry(1.0f, 20.0f,
+                getResources().getDrawable(R.drawable.smile1_24)));
+        entries.add(new BarEntry(2.0f, 40.0f,
+                getResources().getDrawable(R.drawable.smile2_24)));
+        entries.add(new BarEntry(3.0f, 60.0f,
+                getResources().getDrawable(R.drawable.smile3_24)));
+        entries.add(new BarEntry(4.0f, 30.0f,
+                getResources().getDrawable(R.drawable.smile4_24)));
+        entries.add(new BarEntry(5.0f, 90.0f,
+                getResources().getDrawable(R.drawable.smile5_24)));
+
+        BarDataSet dataSet2 = new BarDataSet(entries, "Sinus Function");
+        dataSet2.setColor(Color.rgb(240, 120, 124));
+
         ArrayList<Integer> colors = new ArrayList<>();
-        for (int c : ColorTemplate.JOYFUL_COLORS){
+        for (int c : ColorTemplate.JOYFUL_COLORS) {
             colors.add(c);
         }
-        barDataSet.setColors(colors);
+        dataSet2.setColors(colors);
+        dataSet2.setIconsOffset(new MPPointF(0, -10));
 
-        BarData data = new BarData(barDataSet);
+        BarData data = new BarData(dataSet2);
+        data.setValueTextSize(10f);
+        data.setDrawValues(false);
+        data.setBarWidth(0.8f);
+
         chart2.setData(data);
         chart2.invalidate();
     }
 
-    private  void setData3(){
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(1,20f));
-        entries.add(new Entry(2,30f));
-        entries.add(new Entry(3,40f));
-        entries.add(new Entry(4,50f));
-        entries.add(new Entry(5,70f));
+    private void setData3() {
 
-        LineDataSet dataSet = new LineDataSet(entries,"기분별 차트");
-        dataSet.setDrawIcons(true);
-        ArrayList<Integer> colors = new ArrayList<>();
+        ArrayList<Entry> values = new ArrayList<>();
+        values.add(new Entry(24f, 20.0f));
+        values.add(new Entry(48f, 50.0f));
+        values.add(new Entry(72f, 30.0f));
+        values.add(new Entry(96f, 70.0f));
+        values.add(new Entry(120f, 90.0f));
 
-        for (int c : ColorTemplate.JOYFUL_COLORS){
-            colors.add(c);
-        }
-        dataSet.setColors(colors);
-        LineData data = new LineData(dataSet);
+        // create a dataset and give it a type
+        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+        set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set1.setColor(ColorTemplate.getHoloBlue());
+        set1.setValueTextColor(ColorTemplate.getHoloBlue());
+        set1.setLineWidth(1.5f);
+        set1.setDrawCircles(true);
+        set1.setDrawValues(false);
+        set1.setFillAlpha(65);
+        set1.setFillColor(ColorTemplate.getHoloBlue());
+        set1.setHighLightColor(Color.rgb(244, 117, 117));
+        set1.setDrawCircleHole(false);
+
+        // create a data object with the data sets
+        LineData data = new LineData(set1);
+        data.setValueTextColor(Color.WHITE);
+        data.setValueTextSize(9f);
+
+        // set data
         chart3.setData(data);
         chart3.invalidate();
-
     }
 
 

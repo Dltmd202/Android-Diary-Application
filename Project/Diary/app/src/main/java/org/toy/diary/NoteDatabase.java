@@ -26,6 +26,7 @@ public class NoteDatabase{
     public static NoteDatabase getInstance(Context context){
         if(database ==null){
             database = new NoteDatabase(context);
+            database.open();
         }
         return database;
     }
@@ -107,7 +108,6 @@ public class NoteDatabase{
 
         @Override
         public void onOpen(SQLiteDatabase db) {
-            super.onOpen(db);
             println("opened database");
         }
 
