@@ -44,6 +44,7 @@ public class Fragment2 extends Fragment {
     onRequestListener requestListener;
     Context context;
 
+    //
     RelativeLayout topLayout;
     ImageView weatherIcon;
     TextView dateTextView;
@@ -54,7 +55,7 @@ public class Fragment2 extends Fragment {
     ImageView pictureImageView;
 
     CardView moodLayout;
-    RangeSliderView sliderView;
+    RangeSliderView moodSlider;
 
 //    for phtodialog
     int selectedPhotoMenu;
@@ -63,8 +64,19 @@ public class Fragment2 extends Fragment {
 
 //    phothoParentDir
     File file;
+    String photoPath;
 //    realPhoto
     Bitmap resultPhotoBitmap;
+
+
+
+    int mMode = AppConstants.MODE_INSERT;
+    int _id = -1;
+    int weatherIndex = 0;
+    int moodIndex = 2;
+
+    Note item;
+
 
 
     private static final String TAG = "Fragment2";
@@ -100,6 +112,7 @@ public class Fragment2 extends Fragment {
     }
     public void initUI(ViewGroup rootView){
 
+        //Matching
         topLayout = rootView.findViewById(R.id.topLayout);
         weatherIcon = rootView.findViewById(R.id.weatherIcon);
         dateTextView = rootView.findViewById(R.id.dateTextView);
@@ -127,12 +140,18 @@ public class Fragment2 extends Fragment {
 
 
         moodLayout = rootView.findViewById(R.id.moodLayout);
-        sliderView = rootView.findViewById(R.id.sliderView);
+        moodSlider = rootView.findViewById(R.id.sliderView);
 
         Button saveButton = rootView.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mMode == AppConstants.MODE_INSERT){
+                    saveNote();
+                }
+                else if(mMode == AppConstants.MODE_MODIFY){
+                    modifyNote();
+                }
                 if(listener!=null) listener.onTabSelected(0);
             }
         });
@@ -140,6 +159,7 @@ public class Fragment2 extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                deleteNote();
                 if(listener!=null) listener.onTabSelected(0);
             }
         });
@@ -265,6 +285,7 @@ public class Fragment2 extends Fragment {
                             isPhotoCaptured = false;
 
                             pictureImageView.setImageResource(R.drawable.imagetoset);
+                            photoPath = null;
                         }
                     }
                 });
@@ -291,9 +312,10 @@ public class Fragment2 extends Fragment {
     }
     private File createFile() {
         // Create an image file name
-        String filename = "capture.jpg";
+        String filename = createFilename();
         File storageDir = Environment.getExternalStorageDirectory();
         File image = new File(storageDir, filename);
+        photoPath = image.getAbsolutePath();
         return image;
 
     }
@@ -338,6 +360,7 @@ public class Fragment2 extends Fragment {
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String filePath = cursor.getString(columnIndex);
+                    photoPath = filePath;
                     cursor.close();
 
                     resultPhotoBitmap = decodeSampledBitmapFromResource(new File(filePath),
@@ -381,5 +404,66 @@ public class Fragment2 extends Fragment {
 
     }
 
+
+    private String savePicture(){
+        if (photoPath != null){
+            return photoPath;
+        }
+        else{
+            //AppContants 상수 설정할 것
+            return "noImage";
+        }
+    }
+    private void saveNote(){
+        String address = locationTextView.getText().toString();
+        String contents = contentsInput.getText().toString();
+
+        String picturePath = savePicture();
+        String sql = "INSERT INTO "+NoteDatabase.TABLE_NOTE +" (WEATHER , ADDRESS , LOCATION_X , "
+                +" LOCATION_Y , CONTENTS , MOOD , PICTURE ) VALUES ( "
+                + " ' " + weatherIndex +" '  , "
+                + " ' " + address + " ' , "
+                + " ' " + " " + " ' , "
+                + " ' " + " " + " ; , "
+                + " ' " + contents + " ' , "
+                + " ' " + moodIndex + " ' , "
+                + " ' " + picturePath + " ' ) ";
+        NoteDatabase database = NoteDatabase.getInstance(context);
+        database.execSQL(sql);
+    }
+    private void modifyNote(){
+        if( item != null){
+            String address = locationTextView.getText().toString();
+            String contents = contentsInput.getText().toString();
+
+            String picturePath = savePicture();
+
+            String sql = "UPDATE "+ NoteDatabase.TABLE_NOTE + "SET "
+                    +" WEATHER = '"+ weatherIndex+"'"
+                    +" ,ADDRESS = '"+ address+"'"
+                    +" ,LOCATION_X = '"+""+"'"
+                    +" ,LOCATION_Y = '"+""+"'"
+                    +" ,CONTENTS = '"+contents +"'"
+                    +" ,MOOD ="+moodIndex+"'"
+                    +" ,PICTURE = '"+picturePath+"'"
+                    + " WHERE _id = "+ item._id;
+            Log.d(TAG,"sql : "+sql);
+            NoteDatabase database = NoteDatabase.getInstance(context);
+            database.execSQL(sql);
+        }
+    }
+
+    private void deleteNote(){
+        AppConstants.println("deleteNote called.");
+
+        if(item != null){
+            String sql = "DELETE FROM " + NoteDatabase.TABLE_NOTE +
+                    "WHERE _id = " + item._id;
+            Log.d(TAG,"sql : "+sql);
+            NoteDatabase database = NoteDatabase.getInstance(context);
+            database.execSQL(sql);
+        }
+
+    }
 
 }
