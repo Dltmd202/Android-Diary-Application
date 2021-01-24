@@ -57,6 +57,7 @@ public class Fragment1 extends Fragment {
         // Inflate the layout for this fragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment1,container,false);
         initUI(rootView);
+        loadNoteListData();
         Log.d("Adapter","CreateFragment1");
         return rootView;
     }
@@ -83,9 +84,6 @@ public class Fragment1 extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false);
         recyclerView.setLayoutManager(manager);
         adapter = new NoteAdapter();
-        adapter.items.add(new Note(0,"0","진주시 ","","","하하","0","capture1.jpg","1월19일" ));
-        adapter.addItem(new Note(1,"0","진주시 ","","","하하","0","capture1.jpg","1월19일" ));
-        adapter.addItem(new Note(2,"0","진주시 ","","","하하","0","capture1.jpg","1월19일" ));
 
         Log.d("Adapter", String.valueOf(adapter.items.get(0)._id));
         recyclerView.setAdapter(adapter);
