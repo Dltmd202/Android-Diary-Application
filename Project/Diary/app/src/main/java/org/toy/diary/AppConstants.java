@@ -39,7 +39,7 @@ public class AppConstants {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.d("TAG",data);
+                Log.d(TAG,data);
             }
         });
     }

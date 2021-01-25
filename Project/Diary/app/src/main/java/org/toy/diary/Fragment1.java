@@ -85,7 +85,7 @@ public class Fragment1 extends Fragment {
         recyclerView.setLayoutManager(manager);
         adapter = new NoteAdapter();
 
-        Log.d("Adapter", String.valueOf(adapter.items.get(0)._id));
+//        Log.d("Adapter", String.valueOf(adapter.items.get(0)._id));
         recyclerView.setAdapter(adapter);
 
         Log.d("Adapter","SetAdapter");
@@ -108,6 +108,9 @@ public class Fragment1 extends Fragment {
         NoteDatabase database = NoteDatabase.getInstance(context);
         if(database != null){
             Cursor outCursor = database.rawQuery(sql);
+
+            if(outCursor == null) return -1;
+
             recordCount = outCursor.getCount();
             AppConstants.println("recored count : "+recordCount );
             ArrayList<Note> items = new ArrayList<>();

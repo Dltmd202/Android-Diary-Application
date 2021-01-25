@@ -147,12 +147,18 @@ public class Fragment2 extends Fragment {
             @Override
             public void onClick(View v) {
                 if(mMode == AppConstants.MODE_INSERT){
-                    saveNote();
+                    try {
+                        println("Try to save Note");
+                        saveNote();
+                    }
+                    catch (Exception e){
+                        Log.e(TAG,"Fail to save",e);
+                    }
                 }
                 else if(mMode == AppConstants.MODE_MODIFY){
                     modifyNote();
                 }
-                if(listener!=null) listener.onTabSelected(0);
+//                if(listener!=null) listener.onTabSelected(0);
             }
         });
         Button deleteButton = rootView.findViewById(R.id.deleteButton);
@@ -160,14 +166,14 @@ public class Fragment2 extends Fragment {
             @Override
             public void onClick(View v) {
                 deleteNote();
-                if(listener!=null) listener.onTabSelected(0);
+//                if(listener!=null) listener.onTabSelected(0);
             }
         });
         Button closeButton = rootView.findViewById(R.id.closeButton);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener!=null) listener.onTabSelected(0);
+//                if(listener!=null) listener.onTabSelected(0);
             }
         });
         RangeSliderView sliderView = rootView.findViewById(R.id.sliderView);
@@ -421,13 +427,13 @@ public class Fragment2 extends Fragment {
         String picturePath = savePicture();
         String sql = "INSERT INTO "+NoteDatabase.TABLE_NOTE +" (WEATHER , ADDRESS , LOCATION_X , "
                 +" LOCATION_Y , CONTENTS , MOOD , PICTURE ) VALUES ( "
-                + " ' " + weatherIndex +" '  , "
-                + " ' " + address + " ' , "
-                + " ' " + " " + " ' , "
-                + " ' " + " " + " ; , "
-                + " ' " + contents + " ' , "
-                + " ' " + moodIndex + " ' , "
-                + " ' " + picturePath + " ' ) ";
+                + "'" + weatherIndex +"', "
+                + "'" + address + "', "
+                + "'" + "" + "', "
+                + "'" + "" + "', "
+                + "'" + contents + "', "
+                + "'" + moodIndex + "', "
+                + "'" + picturePath + "')";
         NoteDatabase database = NoteDatabase.getInstance(context);
         database.execSQL(sql);
     }
@@ -465,5 +471,7 @@ public class Fragment2 extends Fragment {
         }
 
     }
-
+    private void println(String data){
+        Log.d(TAG,data);
+    }
 }
