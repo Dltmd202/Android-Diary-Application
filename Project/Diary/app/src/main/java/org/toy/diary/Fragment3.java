@@ -32,6 +32,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -65,6 +66,8 @@ public class Fragment3 extends Fragment {
     }
     public void initUI(ViewGroup rootView){
         chart = rootView.findViewById(R.id.chart1);
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
         chart2 = rootView.findViewById(R.id.chart2);
         chart3 = rootView.findViewById(R.id.chart3);
 
@@ -278,6 +281,8 @@ public class Fragment3 extends Fragment {
         NoteDatabase database = NoteDatabase.getInstance(context);
 
         String sql = "Select MOOD , COUNT(MOOD)  FROM " + NoteDatabase.TABLE_NOTE +
+                " WHERE CREATE_DATE >= '" + getMonthBefore(1) +"' " +
+                " AND CREATE_DATE <= '" + getToday() + "' "+
                 " GROUP BY MOOD";
 
         Cursor cursor = database.rawQuery(sql);
@@ -296,6 +301,8 @@ public class Fragment3 extends Fragment {
         setData1(dataHash1);
 
         sql = "SELECT STRFTIME('%W' , CREATE_DATE ) , AVG(MOOD) FROM " + NoteDatabase.TABLE_NOTE +
+                " WHERE CREATE_DATE >= '" + getMonthBefore(1) +"' " +
+                " AND CREATE_DATE <= '" + getToday() + "' "+
                 " GROUP BY STRFTIME( '%W' , CREATE_DATE )";
 
         cursor = database.rawQuery(sql);
@@ -315,6 +322,8 @@ public class Fragment3 extends Fragment {
         setData2(dataHash2);
 
         sql = "SELECT STRFTIME ('%Y-%m-%d' , CREATE_DATE ) , AVG(CAST(MOOD AS REAL)) FROM " + NoteDatabase.TABLE_NOTE +
+                " WHERE CREATE_DATE >= '" + getDayBefore(4) +"' " +
+                " AND CREATE_DATE <= '" + getToday() + "' "+
                 " GROUP BY STRFTIME ('%Y-%m-%d' , CREATE_DATE )";
 
         cursor = database.rawQuery(sql);
@@ -352,6 +361,27 @@ public class Fragment3 extends Fragment {
             AppConstants.println("Third Set #"+i+ " -> "+ monthDate + " , "+moodCount);
         }
         setData3(dataKeys3 , dataValues3);
+    }
+
+    public String getToday(){
+        Date today = new Date();
+        return AppConstants.dateFormat5.format(today);
+    }
+
+    public String getDayBefore(int amount){
+        Date todayDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(todayDate);
+        cal.add(Calendar.DAY_OF_MONTH,(amount * -1));
+        return AppConstants.dateFormat5.format(cal.getTime());
+    }
+
+    public String getMonthBefore(int amount){
+        Date todayDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(todayDate);
+        cal.add(Calendar.MONTH,(amount * -1));
+        return AppConstants.dateFormat5.format(cal.getTime());
     }
 
 
